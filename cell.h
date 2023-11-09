@@ -3,6 +3,7 @@
 
 #include <QTextEdit>
 #include <QKeyEvent>
+#include <QLabel>
 
 class Cell : public QTextEdit
 {
@@ -53,6 +54,6 @@ private:
     std::array<bool,9> pencil{false};
     int indexRow;
     int indexCol;
-    QFont resp;
+    QLabel pencilView;
 };
 #endif

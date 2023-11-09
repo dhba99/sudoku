@@ -37,6 +37,7 @@ void Cell::setStylePencilOffCell(){
     this->viewport()->setCursor(Qt::ArrowCursor);
 
 
+
 }
 
 void Cell::setStylePencilOnCell()
@@ -64,8 +65,8 @@ void Cell::setScopeStyleCell()
 
 void Cell::setSelectedStyleCell()
 {
-    if(pencilModeOn())  setStylePencilOnCell();
-    else    setStylePencilOffCell();
+//    if(pencilModeOn())  setStylePencilOnCell();
+//    else    setStylePencilOffCell();
 
     QPalette paletteC = this->palette();
     if(this->hasRpta()&&!this->isCorrect()){
@@ -81,8 +82,8 @@ void Cell::setSelectedStyleCell()
 }
 
 void Cell::setUnselectedStyleCell(){
-    if(pencilModeOn())  setStylePencilOnCell();
-    else    setStylePencilOffCell();
+//    if(pencilModeOn())  setStylePencilOnCell();
+//    else    setStylePencilOffCell();
 
     QPalette paletteC = this->palette();
     //this->setStyleSheet("QTextEdit { background-color: rgb(255,255,255); }");
@@ -109,6 +110,7 @@ void Cell::setNumberCell(int num){
     }else{
         this->setText(QString::number(num));
     }
+    this->setStylePencilOffCell();
     this->setAlignment(Qt::AlignCenter);
 }
 
@@ -121,6 +123,7 @@ void Cell::addDeletePencilValue(int number)
 {
     pencil[number-1]=!pencil[number-1];
     //this->setStylePencilOnCell();
+    this->setStylePencilOnCell();
     this->setPencilMode(true);
 }
 
@@ -168,6 +171,7 @@ bool Cell::hasRpta()
 
 bool Cell::pencilModeOn()
 {
+    //this->setStylePencilOnCell();
     return this->pencilMode;
 }
 

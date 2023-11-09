@@ -22,7 +22,6 @@ public:
     ~Game()=default;
 
     void keyPressEvent(QKeyEvent *event) override;
-//    void keyReleaseEvent(QKeyEvent * event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
 
 signals:
@@ -44,7 +43,7 @@ private:
 
     QLabel *tiempo;
     QTimer *timer;
-QTime* a;
+    QTime* a;
     std::vector<std::tuple<int,int,int,bool>>  movements;
 };
 

@@ -16,7 +16,7 @@ Game::Game(QWidget* parent)
 
     //Widget principal
     this->setFocus();
-    QIcon *iwp = new QIcon("C://Users//Bryan//OneDrive//OneDriveAccs//Documentos//untitled//resources//8.rc");
+    QIcon *iwp = new QIcon(":/icon/resources/windowIcon.rc");
     this->setWindowIcon(*iwp);
     this->setWindowTitle("Sudoku v1.00");
     ////////////////////////////////
@@ -52,22 +52,24 @@ Game::Game(QWidget* parent)
     QPushButton *lapiz=new QPushButton();
     lapiz->setFont(font);
     lapiz->setText("Lapiz");
-    QIcon *il = new QIcon("C://Users//Bryan//OneDrive//OneDriveAccs//Documentos//untitled//resources//10.png");
+    QIcon *il = new QIcon(":/icon/resources/pencilIcon.png");
     lapiz->setIcon(*il);
 
     lapiz->setIconSize(*new QSize(50,50));
 
     //Boton borrar
     QPushButton *borrar=new QPushButton();
+    borrar->setFont(font);
     borrar->setText("Borrar");
-    QIcon *ib = new QIcon("C://Users//Bryan//OneDrive//OneDriveAccs//Documentos//untitled//resources//8.png");
+    QIcon *ib = new QIcon(":/icon/resources/deleteIcon.png");
     borrar->setIcon(*ib);
     borrar->setIconSize(*new QSize(50,50));
 
     //Boton deshacer
     QPushButton *deshacer=new QPushButton();
+    deshacer->setFont(font);
     deshacer->setText("Deshacer");
-    QIcon *id = new QIcon("C://Users//Bryan//OneDrive//OneDriveAccs//Documentos//untitled//resources//9.png");
+    QIcon *id = new QIcon(":/icon/resources/undoIcon.png");
     deshacer->setIcon(*id);
     deshacer->setIconSize(*new QSize(50,50));
 
@@ -145,6 +147,7 @@ void Game::keyPressEvent(QKeyEvent *event)
     if((event->text()==""))     return;
     if(!event->text().at(0).isDigit()  ||  event->text().at(0)=='0') return;
 
+    //Ejecuta el movimiento
     makeMovement(Cell::indexR,Cell::indexC,event->text().toInt());
     selectedEvent();
 
@@ -166,6 +169,8 @@ void Game::selectedEvent()
 {
     //Borra los estilos dejando el estilo base
     Tablero::eraseStyleCells(tab);
+
+    if(!indexTmp->hasFocus()) return;
 
     //Configura el estilo del ambito de la seleccion
     Tablero::setScopeStyleCells(tab,Cell::indexR,Cell::indexC);
@@ -191,11 +196,6 @@ void Game::makeMovement(int x, int y, int value)
 
     }
     movements.push_back(std::make_tuple(x,y,value,this->lapizOn));
-//    for(auto i=movements.crbegin();i!=movements.crend();++i){
-//        cout<<std::get<0>(*i)<<" "<<std::get<1>(*i)<<" "<<std::get<2>(*i)<<" "<<std::get<3>(*i)<<endl;
-
-//    }
-//    cout<<endl;
 }
 
 void Game::lapiz()
@@ -253,7 +253,6 @@ void Game::deshacer()
          && std::get<1>(*i)==ic){
 
             if(std::get<3>(*i)){
-                cout<<"aaa aaa a "<<std::get<2>(*i)<<endl;
                 tab[ir][ic]->setRpta(-1);
                 foundPen=true;
                 tab[ir][ic]->addDeletePencilValue(std::get<2>(*i));
@@ -284,13 +283,16 @@ void Game::deshacer()
 void Game::borrar(){
 
     if(indexTmp->isStart())     return;
-    Tablero::eraseStyleCells(tab);
     indexTmp->setRpta(-1);
+    indexTmp->setFocus();
     indexTmp->deleteAllPencilValues();
 
     //Añade a la pila de movimientos
     movements.push_back(std::make_tuple
                         (Cell::indexR,Cell::indexC,-1,false));
+
+
+    selectedEvent();
 }
 
 

@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>resources/deleteIcon.png</file>
+        <file>resources/pencilIcon.png</file>
+        <file>resources/undoIcon.png</file>
+        <file>resources/windowIcon.rc</file>
+    </qresource>
+</RCC>
