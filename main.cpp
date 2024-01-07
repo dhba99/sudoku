@@ -11,13 +11,12 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    // MainWindow w;
+    MainWindow* w = new MainWindow(nullptr);
 
-    Game *game = new Game();
-//    QIcon iwp("undoResource.png");
-//    a.setWindowIcon();
-
-    game->show();
+    w->show();
+    // Game *game = new Game();
+    // game->show();
 
     return a.exec();
 

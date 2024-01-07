@@ -16,10 +16,13 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    bool event(QEvent *e) override;
-    Game *r;
+    //bool event(QEvent *e) override;
+    Game *game;
+public slots:
+    void easyLevel();
+    void mediumLevel();
+    void hardLevel();
 private:
     Ui::MainWindow *ui;
-
 };
 #endif // MAINWINDOW_H

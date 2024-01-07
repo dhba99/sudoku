@@ -4,39 +4,73 @@
 #include <QStyle>
 #include <QTime>
 #include <QTimer>
+#include <QDebug>
 #include "game.h"
 #include "tablero.h"
 #include "creador.cpp"
 
 #define indexTmp tab[Cell::indexR][Cell::indexC]
 
-Game::Game(QWidget* parent)
+Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficulty}
 {
 
+    //-----------------------------------------Layout Superior---------------------------------------------
 
-    //Widget principal
-    this->setFocus();
-    QIcon *iwp = new QIcon(":/icon/resources/windowIcon.rc");
-    this->setWindowIcon(*iwp);
-    this->setWindowTitle("Sudoku v1.00");
-    ////////////////////////////////
-    this->setFocusPolicy(Qt::StrongFocus);
+    QHBoxLayout* superior = new QHBoxLayout();
 
-    //-----------------------------------------Layout 1---------------------------------------------
-    //Tiempo
+
+    //Time
     a = new QTime();
     a->setHMS(0,0,0);
     tiempo = new QLabel();
     QFont styles;
-    styles.setWeight(QFont::Thin);
     styles.setPointSize(25);
+    styles.setFamily("Segoe UI");
+    styles.setStyleHint(QFont::TypeWriter);
     tiempo->setFont(styles);
     tiempo->setWordWrap(true);
-    tiempo->setAlignment(Qt::AlignCenter);
+    tiempo->setAlignment(Qt::AlignRight);
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&Game::updateTime);
     timer->start(1000);
 
+
+    qDebug()<<"Llega aca";
+    lDifficulty = new QLabel();
+    //Difficulty
+    switch(difficulty){
+        case Difficulty::EASY: lDifficulty->setText("Facil"); break;
+        case Difficulty::MEDIUM: lDifficulty->setText("Intermedio"); break;
+        case Difficulty::HARD: lDifficulty->setText("Dificil"); break;
+        default: break;
+    }
+
+    lDifficulty->setAlignment(Qt::AlignCenter);
+    styles=lDifficulty->font();
+    styles.setPointSize(18);
+    lDifficulty->setFont(styles);
+
+
+    QPixmap correct(":/icon/resources/checkIcon.png"),error(":/icon/resources/errorIcon.png"),empty(":/icon/resources/interrogationIcon.png");
+    QLabel *correctData = new QLabel();
+    QLabel *errorData = new QLabel();
+    QLabel * emptyData= new QLabel();
+    QPicture s;
+    s.load(":/icon/resources/checkIcon.png");
+    correctData->setPicture(s);
+    correctData->setText("dsds");
+    //correctData->setPixmap(correct);
+    errorData->setPixmap(error);
+    emptyData->setPixmap(empty);
+    correctData->resize(32,32),errorData->resize(32,32),emptyData->resize(15,15);
+    correctData->setAlignment(Qt::AlignCenter);
+
+
+    superior->addWidget(correctData);
+    superior->addWidget(errorData);
+    superior->addWidget(emptyData);
+    superior->addWidget(lDifficulty);
+    superior->addWidget(tiempo);
 
     //-----------------------------------------Tablero---------------------------------------------
     //Tablero de Sudoku
@@ -89,12 +123,15 @@ Game::Game(QWidget* parent)
     //-----------------------------------------Uniendo Layouts---------------------------------------------
     //Layout principal
     QVBoxLayout *principal = new QVBoxLayout();
+
+
+
     //Añadiendo layouts
-    principal->addWidget(tiempo);
+   // principal->addWidget(tiempo);
+    principal->addLayout(superior);
     principal->addLayout(tablero);
     principal->addLayout(menu);
     this->setLayout(principal);
-
 
     generateGame();
 
@@ -192,6 +229,8 @@ void Game::makeMovement(int x, int y, int value)
         tab[x][y]->addDeletePencilValue(value);
     }else{
         tab[x][y]->setRpta(value);
+        if(!tab[x][y]->isCorrect()) ++errors;
+        qDebug()<<"Errores: "<<errors<<Qt::endl;
         tab[x][y]->eraseAllPencilValues();
 
     }

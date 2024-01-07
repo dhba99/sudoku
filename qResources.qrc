@@ -4,5 +4,8 @@
         <file>resources/pencilIcon.png</file>
         <file>resources/undoIcon.png</file>
         <file>resources/windowIcon.rc</file>
+        <file>resources/errorIcon.png</file>
+        <file>resources/checkIcon.png</file>
+        <file>resources/interrogationIcon.png</file>
     </qresource>
 </RCC>

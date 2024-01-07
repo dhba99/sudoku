@@ -192,6 +192,7 @@ void Cell::focusInEvent(QFocusEvent *event)
 {
     Cell::indexC = indexCol;
     Cell::indexR = indexRow;
+    qDebug()<<"********************************************************************************************************************";
     emit signalSelected();
 }
 

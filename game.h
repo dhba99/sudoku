@@ -18,8 +18,11 @@ class Game : public QWidget
 
 public:
 
-    Game(QWidget *parent=nullptr);
+    enum class Difficulty{EASY,MEDIUM,HARD};
+
+    Game(QWidget *parent, Difficulty inDifficulty);
     ~Game()=default;
+
 
     void keyPressEvent(QKeyEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -40,7 +43,10 @@ private:
     std::array<std::array<Cell*,9>,9> tab;
     Ui::Game *ui;
     bool lapizOn=false;
+    int errors=0;
+    Difficulty difficulty;
 
+    QLabel *lDifficulty;
     QLabel *tiempo;
     QTimer *timer;
     QTime* a;

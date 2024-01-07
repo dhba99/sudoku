@@ -183,7 +183,8 @@ void main11(){
         }
 
         int rix,rjx,temp;
-        for(int i=0;i<=55;++i){
+	//cambiar la dificultad
+        for(int i=0;i<=35;++i){
 
             for(int ix=0;ix<9;++ix){
                 for(int jx=0;jx<9;++jx){

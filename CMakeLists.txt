@@ -14,7 +14,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp mainwindow.h mainwindow.ui
+        mainwindow.cpp mainwindow.h
         cell.h cell.cpp
         tablero.h tablero.cpp
         game.h game.cpp
