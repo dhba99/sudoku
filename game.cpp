@@ -5,8 +5,10 @@
 #include <QTime>
 #include <QTimer>
 #include <QDebug>
+#include <thread>
 #include "game.h"
 #include "tablero.h"
+#include "styles.h"
 #include "creador.cpp"
 
 #define indexTmp tab[Cell::indexR][Cell::indexC]
@@ -23,19 +25,12 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
     a = new QTime();
     a->setHMS(0,0,0);
     tiempo = new QLabel();
-    QFont styles;
-    styles.setPointSize(25);
-    styles.setFamily("Segoe UI");
-    styles.setStyleHint(QFont::TypeWriter);
-    tiempo->setFont(styles);
-    tiempo->setWordWrap(true);
-    tiempo->setAlignment(Qt::AlignRight);
+    Styles::setTimerStyle(tiempo);
     timer = new QTimer(this);
     connect(timer,&QTimer::timeout,this,&Game::updateTime);
     timer->start(1000);
 
 
-    qDebug()<<"Llega aca";
     lDifficulty = new QLabel();
     //Difficulty
     switch(difficulty){
@@ -45,32 +40,40 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
         default: break;
     }
 
-    lDifficulty->setAlignment(Qt::AlignCenter);
-    styles=lDifficulty->font();
+    QFont styles=lDifficulty->font();
     styles.setPointSize(18);
     lDifficulty->setFont(styles);
 
 
     QPixmap correct(":/icon/resources/checkIcon.png"),error(":/icon/resources/errorIcon.png"),empty(":/icon/resources/interrogationIcon.png");
+
     QLabel *correctData = new QLabel();
     QLabel *errorData = new QLabel();
     QLabel * emptyData= new QLabel();
-    QPicture s;
-    s.load(":/icon/resources/checkIcon.png");
-    correctData->setPicture(s);
-    correctData->setText("dsds");
-    //correctData->setPixmap(correct);
+
+    correctCnt = new QLabel();
+    errorCnt = new QLabel();
+    emptyCnt= new QLabel();
+
+    Styles::setCountersGameStyle(correctCnt);
+    Styles::setCountersGameStyle(errorCnt);
+    Styles::setCountersGameStyle(emptyCnt);
+
+    correctData->setPixmap(correct);
     errorData->setPixmap(error);
     emptyData->setPixmap(empty);
+
     correctData->resize(32,32),errorData->resize(32,32),emptyData->resize(15,15);
-    correctData->setAlignment(Qt::AlignCenter);
 
+    superior->addWidget(correctData,2,Qt::AlignLeft);
+    superior->addWidget(correctCnt,2,Qt::AlignLeft);
+    superior->addWidget(errorData,2,Qt::AlignLeft);
+    superior->addWidget(errorCnt,2,Qt::AlignLeft);
+    superior->addWidget(emptyData,2,Qt::AlignLeft);
+    superior->addWidget(emptyCnt,16,Qt::AlignLeft);
+    superior->addWidget(lDifficulty,34,Qt::AlignCenter);
+    superior->addWidget(tiempo,33,Qt::AlignRight);
 
-    superior->addWidget(correctData);
-    superior->addWidget(errorData);
-    superior->addWidget(emptyData);
-    superior->addWidget(lDifficulty);
-    superior->addWidget(tiempo);
 
     //-----------------------------------------Tablero---------------------------------------------
     //Tablero de Sudoku
@@ -113,6 +116,8 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
     QObject::connect(borrar,&QPushButton::clicked,this,&Game::borrar);
     QObject::connect(deshacer,&QPushButton::clicked,this,&Game::deshacer);
 
+    QObject::connect(this,&Game::signalMovement,this,&Game::movementEvent);
+
     //Poniendo botones en layout menu
     QHBoxLayout* menu = new QHBoxLayout();
     menu->addWidget(lapiz);
@@ -133,7 +138,7 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
     principal->addLayout(menu);
     this->setLayout(principal);
 
-    generateGame();
+    generateGame(difficulty);
 
     for(auto& a1:tab){
         for(auto& a2:a1){
@@ -142,10 +147,13 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
             QObject::connect(this,&Game::signalSelectedPress,this,&Game::selectedEvent);
         }
     }
+
+    emit signalMovement();
 }
 
 
 void Game::updateTime(){
+    // std::this_thread::sleep_for
     *this->a = this->a->addMSecs(1000);
     this->tiempo->setText(this->a->toString());
 }
@@ -155,6 +163,20 @@ void Game::keyPressEvent(QKeyEvent *event)
 {
     //Si ninguna celda esta en foco
     if(!indexTmp->hasFocus())   return;
+
+    //Shortcuts
+    if(event->key() == Qt::Key_Backspace){
+        deshacer();
+        return;
+    }
+    if(event->key() == Qt::Key_Delete){
+        borrar();
+        return;
+    }
+    if(event->modifiers() & Qt::ControlModifier && event->key()==Qt::Key_L){
+        lapiz();
+        return;
+    }
 
     //Si la tecla presionada es una direccional
     if(event->key() >= 0x01000012 && event->key() <= 0x01000015){
@@ -185,7 +207,8 @@ void Game::keyPressEvent(QKeyEvent *event)
     if(!event->text().at(0).isDigit()  ||  event->text().at(0)=='0') return;
 
     //Ejecuta el movimiento
-    makeMovement(Cell::indexR,Cell::indexC,event->text().toInt());
+    makeMovement(Cell::indexR,Cell::indexC,event->text().toInt(),this->lapizOn);
+    movements.push_back(std::make_tuple(Cell::indexR,Cell::indexC,event->text().toInt(),this->lapizOn));
     selectedEvent();
 
 }
@@ -222,19 +245,34 @@ void Game::selectedEvent()
     Tablero::setSelectedStyleCells(tab,indexTmp->toPlainText());
 }
 
-void Game::makeMovement(int x, int y, int value)
+void Game::movementEvent()
 {
-    if(this->lapizOn){
+    corrects=0,errors=0,emptys=0;
+    for(int i=0;i<9;++i){
+        for(int j=0;j<9;++j){
+            if(tab[i][j]->getRpta()==-1) ++emptys;
+            else{
+                if(tab[i][j]->isCorrect()) ++corrects;
+                else ++errors;
+            }
+
+        }
+    }
+    correctCnt->setText(QString::number(this->corrects));
+    errorCnt->setText(QString::number(this->errors));
+    emptyCnt->setText(QString::number(this->emptys));
+}
+
+void Game::makeMovement(int x, int y, int value,bool lapizOn)
+{
+    if(lapizOn){
         if(tab[x][y]->hasRpta()) return;
         tab[x][y]->addDeletePencilValue(value);
     }else{
         tab[x][y]->setRpta(value);
-        if(!tab[x][y]->isCorrect()) ++errors;
-        qDebug()<<"Errores: "<<errors<<Qt::endl;
         tab[x][y]->eraseAllPencilValues();
-
     }
-    movements.push_back(std::make_tuple(x,y,value,this->lapizOn));
+    emit signalMovement();
 }
 
 void Game::lapiz()
@@ -245,7 +283,8 @@ void Game::lapiz()
 
 
 
-void Game::generateGame(){
+void Game::generateGame(Difficulty difficulty){
+
     main11();
 
     //Generate all
@@ -292,14 +331,16 @@ void Game::deshacer()
          && std::get<1>(*i)==ic){
 
             if(std::get<3>(*i)){
-                tab[ir][ic]->setRpta(-1);
+               makeMovement(ir,ic,-1,false);
+               // tab[ir][ic]->setRpta(-1);
                 foundPen=true;
                 tab[ir][ic]->addDeletePencilValue(std::get<2>(*i));
                 tab[ir][ic]->setPencilMode(true);
             }else{
 
                 if(!foundPen){
-                    tab[ir][ic]->setRpta(std::get<2>(*i));
+                    makeMovement(ir,ic,std::get<2>(*i),false);
+                   // tab[ir][ic]->setRpta(std::get<2>(*i));
                     tab[ir][ic]->setPencilMode(false);
                     foundNum=true;
                 }
@@ -313,7 +354,7 @@ void Game::deshacer()
 
 
     if(!foundNum && !foundPen){
-        tab[ir][ic]->setRpta(-1);
+        makeMovement(ir,ic,-1,false);
     }
     selectedEvent();
 
@@ -322,14 +363,13 @@ void Game::deshacer()
 void Game::borrar(){
 
     if(indexTmp->isStart())     return;
-    indexTmp->setRpta(-1);
+    makeMovement(Cell::indexR,Cell::indexC,-1,false);
     indexTmp->setFocus();
     indexTmp->deleteAllPencilValues();
 
     //Añade a la pila de movimientos
     movements.push_back(std::make_tuple
                         (Cell::indexR,Cell::indexC,-1,false));
-
 
     selectedEvent();
 }

@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
 #include <QObject>
 #include "game.h"
@@ -16,13 +15,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    //bool event(QEvent *e) override;
-    Game *game;
 public slots:
     void easyLevel();
     void mediumLevel();
     void hardLevel();
+    void resolveGame();
 private:
-    Ui::MainWindow *ui;
+    Game *game;
 };
 #endif // MAINWINDOW_H

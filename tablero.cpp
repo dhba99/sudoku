@@ -7,7 +7,7 @@ Tablero::Tablero()
     for(int i=0;i<9;i+=3){
         for(int j=0;j<9;j+=3){
             QGridLayout *square = new QGridLayout();
-            square->setSpacing(0);
+            square->setSpacing(2);
             for(int i1=i;i1<i+3;i1++){
                 for(int j1=j;j1<j+3;j1++){
                     tablero[i1][j1]=new Cell(i1,j1,-1);

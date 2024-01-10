@@ -29,25 +29,28 @@ public:
 
 signals:
     void signalSelectedPress();
+    void signalMovement();
 
 public slots:
     void updateTime();
     void selectedEvent();
-    void makeMovement(int x, int y, int value);
+    void movementEvent();
+    void makeMovement(int x, int y, int value,bool lapizOn);
     void lapiz();
     void deshacer();
     void borrar();
-    void generateGame();
+    void generateGame(Difficulty difficulty);
 
 private:
     std::array<std::array<Cell*,9>,9> tab;
     Ui::Game *ui;
     bool lapizOn=false;
-    int errors=0;
+    int corrects=0,errors=0,emptys=0;
     Difficulty difficulty;
 
     QLabel *lDifficulty;
     QLabel *tiempo;
+    QLabel *correctCnt,*errorCnt,* emptyCnt;
     QTimer *timer;
     QTime* a;
     std::vector<std::tuple<int,int,int,bool>>  movements;

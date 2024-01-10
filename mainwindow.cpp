@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "styles.h"
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -7,7 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    //, ui(new Ui::MainWindow)
 {
 
     //Widget principal
@@ -15,33 +16,38 @@ MainWindow::MainWindow(QWidget *parent)
     QIcon *iwp = new QIcon(":/icon/resources/windowIcon.rc");
     this->setWindowIcon(*iwp);
     this->setWindowTitle("Sudoku v1.00");
-    ////////////////////////////////
     this->setFocusPolicy(Qt::StrongFocus);
 
+    QLabel* titleLabel = new QLabel("Sudoku v1.00");
+    Styles::setTitleStyle(titleLabel);
 
-    QPushButton* easy=new QPushButton();
-    QPushButton* medium=new QPushButton();
-    QPushButton* hard=new QPushButton();
+    QPushButton* easyButton = new QPushButton();
+    QPushButton* mediumButton = new QPushButton();
+    QPushButton* hardButton = new QPushButton();
+    QPushButton* resolveButton = new QPushButton();
 
-    QObject::connect(easy,&QPushButton::clicked,this,&MainWindow::easyLevel);
-    QObject::connect(medium,&QPushButton::clicked,this,&MainWindow::mediumLevel);
-    QObject::connect(hard,&QPushButton::clicked,this,&MainWindow::hardLevel);
+    QObject::connect(easyButton,&QPushButton::clicked,this,&MainWindow::easyLevel);
+    QObject::connect(mediumButton,&QPushButton::clicked,this,&MainWindow::mediumLevel);
+    QObject::connect(hardButton,&QPushButton::clicked,this,&MainWindow::hardLevel);
+    QObject::connect(resolveButton,&QPushButton::clicked,this,&MainWindow::resolveGame);
 
-    QStyle* style;
+    easyButton->setText("Facil");
+    mediumButton->setText("Intermedio");
+    hardButton->setText("Dificil");
+    resolveButton->setText("Resolver mi juego");
 
-    easy->setText("Facil");
-    medium->setText("Intermedio");
-    hard->setText("Dificil");
-
-    easy->setFixedSize(250,70);
-    medium->setFixedSize(250,70);
-    hard->setFixedSize(250,70);
+    easyButton->setFixedSize(250,70);
+    mediumButton->setFixedSize(250,70);
+    hardButton->setFixedSize(250,70);
+    resolveButton->setFixedSize(250,70);
 
 
     QVBoxLayout* mainLayout= new QVBoxLayout();
-    mainLayout->addWidget(easy);
-    mainLayout->addWidget(medium);
-    mainLayout->addWidget(hard);
+    mainLayout->addWidget(titleLabel);
+    mainLayout->addWidget(easyButton);
+    mainLayout->addWidget(mediumButton);
+    mainLayout->addWidget(hardButton);
+    mainLayout->addWidget(resolveButton);
 
     mainLayout->setAlignment(Qt::AlignCenter);
     QWidget* widget = new QWidget();
@@ -55,10 +61,6 @@ MainWindow::MainWindow(QWidget *parent)
     //ui->setupUi(this);
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
 
 void MainWindow::easyLevel()
 {
@@ -78,3 +80,11 @@ void MainWindow::hardLevel()
     setCentralWidget(game);
 }
 
+void MainWindow::resolveGame(){
+
+}
+
+MainWindow::~MainWindow()
+{
+    //delete ui;
+}
