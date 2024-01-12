@@ -1,19 +1,23 @@
+#ifndef RESOLUCIONADOR_CPP
+#define RESOLUCIONADOR_CPP
+
 #include <iostream>
 #include <cstring>
 #include <iomanip>
 #include <vector>
 #include <chrono>
+#include <list>
 using namespace std;
 
-static int tablero[9][9]={     {0,1,5,8,0,4,9,0,0},
-                        {0,0,4,0,5,0,0,0,0},
-                        {0,0,0,0,2,0,0,0,8},
-                        {0,0,3,4,0,9,0,0,6},
-                        {0,2,0,0,0,0,0,3,0},
-                        {0,0,0,0,0,5,0,9,0},
-                        {0,0,0,0,8,0,0,0,0},
-                        {7,0,0,0,0,0,1,0,0},
-                        {0,0,2,6,0,3,0,0,9}};;
+static int tablero[9][9]={  {0,0,0,5,0,0,6,8,0},
+                            {1,0,8,0,4,0,0,0,0},
+                            {0,3,0,0,7,0,0,0,2},
+                            {0,0,6,0,0,0,0,2,0},
+                            {0,4,0,0,0,5,0,0,0},
+                            {2,0,0,0,0,0,4,0,0},
+                            {0,8,0,0,0,0,0,6,3},
+                            {0,0,0,9,0,1,0,0,0},
+                            {0,0,2,0,3,0,9,5,0}};
 signed char psV[9][9][10];
 int solutions;
 
@@ -258,3 +262,4 @@ int main1(){
 // int main(){
 //     main1();
 // }
+#endif

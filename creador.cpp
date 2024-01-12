@@ -1,3 +1,5 @@
+#ifndef CREADOR_CPP
+#define CREADOR_CPP
 #include <iostream>
 #include <array>
 #include <vector>
@@ -7,8 +9,15 @@
 #include <cassert>
 #include <math.h>
 #include <cstring>
+#include <stack>
 #include <chrono>
+#include <algorithm>
+#include <random>
 #include "resolucionador.cpp"
+
+#define F first
+#define S second
+
 using namespace std;
 
 #define SCI static_cast<int>
@@ -19,22 +28,18 @@ static pair<char,bool> def[9][9];
 
 void imprimir(char tablero[9][9]){
     for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            cout <<right <<setw(3)<< (int)tablero[i][j]<<" ";
-        }   
-        ENDL
+        for(int j=0;j<9;j++)    cout <<right <<setw(3)<< (int)tablero[i][j]<<" ";
+        cout<<endl;
     }
-    ENDL ENDL
+    cout<<endl;
 }
 
 void imprimirPS(int possibleValues[9][9][9],int i1){
     for(int i=0;i<9;i++){
-        for(int j=0;j<9;j++){
-            cout <<right <<setw(3)<< possibleValues[i][j][i1]<<" ";
-        }   
-        ENDL
+        for(int j=0;j<9;j++)    cout <<right <<setw(3)<< possibleValues[i][j][i1]<<" ";
+        cout<<endl;
     }
-    ENDL ENDL
+    cout<<endl;
 }
 
 void generate(){
@@ -168,8 +173,19 @@ void generate(){
 }
 
 
-void main11(){
+void main11(int d){
+
+    //int d=2;
     srand(time(NULL));
+    int diff=0;
+    if(d==1){
+        diff=25+ rand()%11;
+        //diff=1;
+    }else if(d==2){
+        diff=40 + rand()%11;
+    }else if(d==3){
+        diff=55 + rand()%1;
+    }
     
 
     for(int im=0;;im++){
@@ -183,35 +199,72 @@ void main11(){
         }
 
         int rix,rjx,temp;
-	//cambiar la dificultad
-        for(int i=0;i<=35;++i){
+
+        stack<pair<pair<int,int>,int>> vals;
+
+        std::random_device rd;
+        std::mt19937 g(rd());
+
+        bool negs[9][9]={false};
+        memset(negs,0,sizeof(negs));
+
+	    //cambiar la dificultad
+        for(int i=0;i<diff;++i){
+            cout<<"Vamos "<<i+1<<endl;
+            vector<pair<pair<int,int>,bool>> x;
 
             for(int ix=0;ix<9;++ix){
                 for(int jx=0;jx<9;++jx){
                     tablero[ix][jx]=(int)tempTablero[ix][jx];
+                    if(negs[ix][jx]) continue;
+                    if(tablero[ix][jx]!=0) x.push_back({{ix,jx},false});
                 }
             }
-            rix=rand()%9;
-            rjx=rand()%9;
-            if((int)tablero[rix][rjx]==0){
-                --i;
-                continue;
-            }
 
-            temp=(int)tablero[rix][rjx];
-            tablero[rix][rjx]=0;
+            shuffle(x.begin(),x.end(),g);
 
-            if(main1()!=1){
-                --i;
-                continue;
-            }
-            tempTablero[rix][rjx]=0;
+            cout<<"Tamaño de X: "<<x.size()<<endl;
             for(int ix=0;ix<9;++ix){
                 for(int jx=0;jx<9;++jx){
-                    cout <<right <<setw(3)<< (int)tt[ix][jx]<<" ";
+                    cout <<right <<setw(3)<< (int)tempTablero[ix][jx]<<" ";
                 }
                 cout<<endl;
             }
+
+            bool found=false;
+            for(size_t j=0;j<x.size();++j){
+                rix=x[j].first.first;
+                rjx=x[j].first.second;
+                
+                temp=(int)tablero[rix][rjx];
+                tablero[rix][rjx]=0;
+                if(main1()!=1){
+                    for(int ix=0;ix<9;++ix){
+                        for(int jx=0;jx<9;++jx){
+                            tablero[ix][jx]=(int)tempTablero[ix][jx];
+                        }
+                    }
+                }else{
+                    vals.push({{rix,rjx},temp});
+                    tempTablero[rix][rjx]=0;
+                    found=true;
+                    break;
+                }
+
+            }
+            
+            if(!found){
+                auto elem = vals.top();
+                vals.pop();
+                tempTablero[elem.F.F][elem.F.S]=elem.S;
+                negs[elem.F.F][elem.F.S]=true;
+                i-=2; 
+            } 
+
+            // int te;
+            // cin>>te;
+
+            
         }
 
 
@@ -219,19 +272,17 @@ void main11(){
             for(int jx=0;jx<9;++jx){
                 def[ix][jx].first=(int)tt[ix][jx];
                 def[ix][jx].second=(int)tempTablero[ix][jx];
-                cout <<right <<setw(3)<< (int)tablero[ix][jx]<<" ";
+                cout <<right <<setw(3)<< (int)tempTablero[ix][jx]<<" ";
                 //tablero[ix][jx]=(int)tt[ix][jx];
             }
             cout<<endl;
         }
         break;
 
+
     }
 
     
 }
 
-// int main(){
-//     main11();
-//     cout<<"mira aca llego"<<endl;
-// }
+#endif

@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QDebug>
 #include <thread>
+#include <QMessageBox>
 #include "game.h"
 #include "tablero.h"
 #include "styles.h"
@@ -20,7 +21,7 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
 
     QHBoxLayout* superior = new QHBoxLayout();
 
-
+    
     //Time
     a = new QTime();
     a->setHMS(0,0,0);
@@ -46,7 +47,7 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
 
 
     QPixmap correct(":/icon/resources/checkIcon.png"),error(":/icon/resources/errorIcon.png"),empty(":/icon/resources/interrogationIcon.png");
-
+    QPushButton* pauseGame = new QPushButton();
     QLabel *correctData = new QLabel();
     QLabel *errorData = new QLabel();
     QLabel * emptyData= new QLabel();
@@ -59,20 +60,24 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
     Styles::setCountersGameStyle(errorCnt);
     Styles::setCountersGameStyle(emptyCnt);
 
+    pauseGame->setIcon(*(new QIcon(":/icon/resources/pauseIcon.png")));
     correctData->setPixmap(correct);
     errorData->setPixmap(error);
     emptyData->setPixmap(empty);
 
     correctData->resize(32,32),errorData->resize(32,32),emptyData->resize(15,15);
 
+    superior->addWidget(pauseGame,2,Qt::AlignLeft);
     superior->addWidget(correctData,2,Qt::AlignLeft);
     superior->addWidget(correctCnt,2,Qt::AlignLeft);
     superior->addWidget(errorData,2,Qt::AlignLeft);
-    superior->addWidget(errorCnt,2,Qt::AlignLeft);
-    superior->addWidget(emptyData,2,Qt::AlignLeft);
-    superior->addWidget(emptyCnt,16,Qt::AlignLeft);
+    superior->addWidget(errorCnt,17,Qt::AlignLeft);
+    // superior->addWidget(emptyData,2,Qt::AlignLeft);
+    // superior->addWidget(emptyCnt,16,Qt::AlignLeft);
     superior->addWidget(lDifficulty,34,Qt::AlignCenter);
     superior->addWidget(tiempo,33,Qt::AlignRight);
+
+    QObject::connect(pauseGame,&QPushButton::clicked,this,&Game::pauseMenuEvent);
 
 
     //-----------------------------------------Tablero---------------------------------------------
@@ -147,6 +152,7 @@ Game::Game(QWidget* parent, Game::Difficulty inDifficulty):difficulty{inDifficul
             QObject::connect(this,&Game::signalSelectedPress,this,&Game::selectedEvent);
         }
     }
+
 
     emit signalMovement();
 }
@@ -258,9 +264,63 @@ void Game::movementEvent()
 
         }
     }
+
     correctCnt->setText(QString::number(this->corrects));
     errorCnt->setText(QString::number(this->errors));
     emptyCnt->setText(QString::number(this->emptys));
+
+    if(emptys==0 && errors==0){
+        selectedEvent();
+        QMessageBox msgBox;
+        QPixmap qpx(30,30);
+        qpx.load(":/icon/resources/winnerIcon.png");
+        QIcon s(":/icon/resources/windowIcon.rc");
+        msgBox.setWindowIcon(s);
+        msgBox.setIconPixmap(qpx);
+        msgBox.setText("Has ganado");
+
+        int ret = msgBox.exec();
+
+        if(ret==QMessageBox::Ok){
+            emit exitGameSignal();
+        }
+
+    }
+
+}
+
+void Game::pauseMenuEvent()
+{
+    this->timer->stop();
+
+    QMessageBox msgBox;
+    QIcon s(":/icon/resources/windowIcon.rc");
+    msgBox.setWindowIcon(s);
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setText("Que desea hacer?");
+
+    QAbstractButton *retornar = msgBox.addButton(tr("Retornar"),QMessageBox::YesRole);
+    QAbstractButton *salir = msgBox.addButton(tr("Salir"),QMessageBox::YesRole);
+
+
+    //QObject::connect(&(msgBox.button(QMessageBox::Ok)),&QPushButton::clicked,this,&Game::exitGameEvent);
+
+    int ret = msgBox.exec();
+
+    if(msgBox.clickedButton()==salir){
+        emit exitGameSignal();
+    }else{
+        this->timer->start(1000);
+
+    }
+
+
+
+}
+
+void Game::exitGameEvent()
+{
+
 }
 
 void Game::makeMovement(int x, int y, int value,bool lapizOn)
@@ -285,7 +345,11 @@ void Game::lapiz()
 
 void Game::generateGame(Difficulty difficulty){
 
-    main11();
+    int diff=0;
+    if(difficulty==Difficulty::EASY) diff=1;
+    else if(difficulty==Difficulty::MEDIUM) diff=2;
+    else if(difficulty==Difficulty::HARD) diff=3;
+    main11(diff);
 
     //Generate all
     for(int i=0;i<9;++i){
@@ -332,7 +396,6 @@ void Game::deshacer()
 
             if(std::get<3>(*i)){
                makeMovement(ir,ic,-1,false);
-               // tab[ir][ic]->setRpta(-1);
                 foundPen=true;
                 tab[ir][ic]->addDeletePencilValue(std::get<2>(*i));
                 tab[ir][ic]->setPencilMode(true);
@@ -340,7 +403,6 @@ void Game::deshacer()
 
                 if(!foundPen){
                     makeMovement(ir,ic,std::get<2>(*i),false);
-                   // tab[ir][ic]->setRpta(std::get<2>(*i));
                     tab[ir][ic]->setPencilMode(false);
                     foundNum=true;
                 }
@@ -373,5 +435,3 @@ void Game::borrar(){
 
     selectedEvent();
 }
-
-

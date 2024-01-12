@@ -7,5 +7,7 @@
         <file>resources/errorIcon.png</file>
         <file>resources/checkIcon.png</file>
         <file>resources/interrogationIcon.png</file>
+        <file>resources/winnerIcon.png</file>
+        <file>resources/pauseIcon.png</file>
     </qresource>
 </RCC>

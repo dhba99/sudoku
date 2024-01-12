@@ -30,11 +30,14 @@ public:
 signals:
     void signalSelectedPress();
     void signalMovement();
+    void exitGameSignal();
 
 public slots:
     void updateTime();
     void selectedEvent();
     void movementEvent();
+    void pauseMenuEvent();
+    void exitGameEvent();
     void makeMovement(int x, int y, int value,bool lapizOn);
     void lapiz();
     void deshacer();

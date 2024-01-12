@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         cell.h cell.cpp
         tablero.h tablero.cpp
         game.h game.cpp
+        #resolucionador.cpp creador.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -27,6 +28,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         qResources.qrc
         styles.h
         styles.cpp
+       # resolve.h
+        #resolve.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET sudoku APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
