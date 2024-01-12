@@ -1,0 +1,9 @@
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/sudoku.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/edit_cache.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/rebuild_cache.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/list_install_components.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/install.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/install/local.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/install/strip.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/sudoku_autogen_timestamp_deps.dir
+/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/sudoku_autogen.dir

@@ -1,0 +1,30 @@
+{
+	"BUILD_DIR" : "/home/bryan/Documents/build-sudoku-main-Desktop-Release/sudoku_autogen",
+	"CMAKE_BINARY_DIR" : "/home/bryan/Documents/build-sudoku-main-Desktop-Release",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/bryan/Documents/build-sudoku-main-Desktop-Release",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/bryan/Documents/sudoku-main",
+	"CMAKE_SOURCE_DIR" : "/home/bryan/Documents/sudoku-main",
+	"INCLUDE_DIR" : "/home/bryan/Documents/build-sudoku-main-Desktop-Release/sudoku_autogen/include",
+	"INPUTS" : 
+	[
+		"/home/bryan/Documents/sudoku-main/resources/pauseIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/deleteIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/errorIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/windowIcon.rc",
+		"/home/bryan/Documents/sudoku-main/resources/pencilIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/interrogationIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/winnerIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/checkIcon.png",
+		"/home/bryan/Documents/sudoku-main/resources/undoIcon.png"
+	],
+	"LOCK_FILE" : "/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/sudoku_autogen.dir/AutoRcc_qResources_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "-name", "qResources" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_qResources.cpp",
+	"RCC_EXECUTABLE" : "/home/bryan/Qt/6.6.1/gcc_64/./libexec/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/bryan/Documents/build-sudoku-main-Desktop-Release/CMakeFiles/sudoku_autogen.dir/AutoRcc_qResources_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/bryan/Documents/sudoku-main/qResources.qrc",
+	"VERBOSITY" : 0
+}
