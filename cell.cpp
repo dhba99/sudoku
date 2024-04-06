@@ -19,7 +19,6 @@ Cell::Cell(int ir,int ic,int num){
 
 void Cell::setStylePencilOffCell(){
     QFont styleCell = this->font();
-
     styleCell.setWeight(QFont::Thin);
     styleCell.setPointSize(40);
 
@@ -95,7 +94,6 @@ void Cell::setUnselectedStyleCell(){
         paletteC.setColor(QPalette::Text,QColor::fromRgb(11, 107, 218));
     }else{
         paletteC.setColor(QPalette::Text,QColor::fromRgb( 237, 36, 36 ));
-        qDebug()<<"llego aca"<<Qt::endl;
     }
     this->setPalette(paletteC);
 //    this->setAlignment(Qt::AlignCenter);

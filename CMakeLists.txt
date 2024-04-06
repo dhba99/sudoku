@@ -49,7 +49,12 @@ else()
     endif()
 endif()
 
+# Configura las bibliotecas de Qt estáticamente
+set(QT_LIBS Qt5::Widgets)
+
 target_link_libraries(sudoku PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -71,6 +76,13 @@ install(TARGETS sudoku
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+# Configura la compilación estática
+set(BUILD_STATIC_LIBS ON)
+if(BUILD_STATIC_LIBS)
+    set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+endif()
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(sudoku)
