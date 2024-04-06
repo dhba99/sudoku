@@ -18,15 +18,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 public slots:
-    void returnMenu();
+    void viewMenu();
     void easyLevel();
     void mediumLevel();
     void hardLevel();
     void resolveGame();
 private:
     Game *game;
-    //QWidget *widget;
     QWidget*  widget;
-    QPointer<QVBoxLayout>  tlayout;
 };
 #endif // MAINWINDOW_H
