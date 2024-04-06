@@ -18,6 +18,7 @@ set(PROJECT_SOURCES
         cell.h cell.cpp
         tablero.h tablero.cpp
         game.h game.cpp
+        styles.h styles.cpp
         #resolucionador.cpp creador.cpp
 )
 
@@ -26,8 +27,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         qResources.qrc
-        styles.h
-        styles.cpp
        # resolve.h
         #resolve.cpp
     )
