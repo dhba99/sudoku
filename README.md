@@ -1,4 +1,6 @@
 # sudoku
 Sudoku Game with UI - In Progress
 
-<img src="https://github.com/dhba99/sudoku/assets/111703074/62a3c8a2-67c5-4129-8a98-8f64ea54b2b4" width="558" height="690" />
+<img src="https://github.com/dhba99/sudoku/blob/main/resources/imgs/Captura%20de%20pantalla%202024-01-12%20170427.png" />
+<img src="https://github.com/dhba99/sudoku/blob/main/resources/imgs/Captura%20de%20pantalla%202024-01-12%20170529.png" />
+<img src="https://github.com/dhba99/sudoku/blob/main/resources/imgs/Captura%20de%20pantalla%202024-01-12%20170846.png" />
